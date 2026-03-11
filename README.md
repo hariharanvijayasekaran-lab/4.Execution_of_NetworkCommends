@@ -26,7 +26,45 @@ This commands includes
 • Other IP Commands e.g. show ip route etc.
 <BR>
 
+## Program
+## Client.py
+~~~
+import socket
+
+s = socket.socket()
+s.connect(('localhost', 8000))
+
+while True:
+    h = input("Enter the website you want to ping (or type 'exit' to quit): ")
+    s.send(h.encode())
+    if h == 'exit': break
+    print(s.recv(4096).decode())
+
+s.close()
+~~~
+## Server.py
+~~~
+import socket
+from pythonping import ping
+
+s = socket.socket()
+s.bind(('localhost', 8000))
+s.listen(1)
+c, _ = s.accept()
+
+while True:
+    h = c.recv(1024).decode()
+    if h == 'exit': 
+        print("Client disconnected.")
+        break
+    try: c.send(str(ping(h, count=4)).encode())
+    except: c.send(b"Ping error")
+
+c.close()
+~~~
 ## Output
+<img width="1245" height="292" alt="506486016-c6b9352d-f6ad-437c-9161-02fcc8ec757c" src="https://github.com/user-attachments/assets/d2dfd48d-78c9-46f6-8f46-0cdadaff97a1" />
+
 
 ## Result
 Thus Execution of Network commands Performed 
